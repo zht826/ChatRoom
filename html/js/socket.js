@@ -43,6 +43,7 @@ socket.on('logout',function(obj) {
 });
 //需要弹出错误
 socket.on('alertError',function(str) {
+    console.log(12);
     alertComfirm.customAlert(str);
 });
 //添加信息
@@ -64,7 +65,7 @@ var mySocket = {
         socket.emit("message", data);
     },
     start: function(){
-        socket = io.connect('ws://127.0.0.1:3030');
+        // socket = io.connect('ws://127.0.0.1:3030');
         //socket = io.connect('ws://tapi.zht87.com');
         socket.emit("login", {"username" : app.zone.username});//发送登录请求
     },

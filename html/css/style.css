@@ -142,7 +142,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     padding-left: 1.2rem;
 }
 li{
-    overflow: hidden;!important;
+    overflow: hidden!important;
 }
 /*弹窗*/
 .modal-inner {

@@ -13,13 +13,10 @@ app.use('/html', express.static(__dirname + '/html'));
 var onlineUsers = {};
 //当前在线人数
 var onlineCount = 0;
-
+var onlineId;
 io.on('connection', function(socket){
-	console.log('a user connected');
-	
 	//监听新用户加入
 	socket.on('login', function(obj){
-		console.log(socket.name);
 		//检查在线列表，如果不在里面就加入
 		if(!onlineUsers.hasOwnProperty(obj.username)) {
             //将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到
@@ -29,12 +26,12 @@ io.on('connection', function(socket){
 			onlineCount++;
 			//向所有客户端广播用户加入
 			io.emit('login', {onlineUsers:onlineUsers, onlineCount:onlineCount, user:obj});
-			console.log(obj.username+'加入了聊天室');
+            console.log(obj.username+'加入了聊天室');
 		}else{
-			socket.emit('alertError','该昵称已存在，请重新输入！');
+            socket.emit('alertError','昵称已存在,请重新输入!');
+            console.log('昵称重复!');
 		}
 	});
-	
 	//监听用户退出
 	socket.on('disconnect', function(){
 		console.log(socket.name);
