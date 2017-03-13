@@ -19,19 +19,20 @@ io.on('connection', function(socket){
 	
 	//监听新用户加入
 	socket.on('login', function(obj){
-		//将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到
-		socket.name = obj.username;
 		console.log(socket.name);
 		//检查在线列表，如果不在里面就加入
 		if(!onlineUsers.hasOwnProperty(obj.username)) {
+            //将新加入用户的唯一标识当作socket的名称，后面退出的时候会用到
+            socket.name = obj.username;
 			onlineUsers[obj.username] = obj.username;
 			//在线人数+1
 			onlineCount++;
+			//向所有客户端广播用户加入
+			io.emit('login', {onlineUsers:onlineUsers, onlineCount:onlineCount, user:obj});
+			console.log(obj.username+'加入了聊天室');
+		}else{
+			socket.emit('alertError','该昵称已存在，请重新输入！');
 		}
-		
-		//向所有客户端广播用户加入
-		io.emit('login', {onlineUsers:onlineUsers, onlineCount:onlineCount, user:obj});
-		console.log(obj.username+'加入了聊天室');
 	});
 	
 	//监听用户退出

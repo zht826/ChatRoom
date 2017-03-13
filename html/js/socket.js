@@ -41,6 +41,10 @@ socket.on('logout',function(obj) {
     app.onlineUser.userList = userList;
     console.log(userList);
 });
+//需要弹出错误
+socket.on('alertError',function(str) {
+    alertComfirm.customAlert(str);
+});
 //添加信息
 function addMsgList(data){
     app.zone.msgList = app.zone.msgList.concat(data);

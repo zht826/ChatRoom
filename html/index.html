@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="css/index.css?v=21">
     <style>
         #show .msg-list{
-            padding: .5rem .5rem;
+            padding: .5rem .5rem 0 .5rem;
             overflow: hidden;
             display: flex;
             align-items: flex-start;
@@ -37,7 +37,11 @@
         #show .msg-list .user .name{
             width: 2rem;
             height:1rem;
+            line-height: 1rem;
             font-size: 0.5rem;
+        }
+        #show .msg-list .msg{
+            text-align:justify
         }
         #show .msg-list .msg-text{
             line-height: 1.2;
@@ -63,6 +67,13 @@
             margin-right: 1rem;
             width: 2rem;
             text-align: center;
+        }
+        #show .isMe{
+            flex-direction: row-reverse;
+        }
+        #show .isMe .user{
+            margin-left: 1rem;
+            margin-right: 0;
         }
     </style>
 </head>
@@ -107,7 +118,7 @@
         </div>
         <div class="main">
             <div id="show">
-                <div class="msg-list" v-for="item in zone.msgList">
+                <div class="msg-list" :class="{isMe:item.name == app.zone.username}" v-for="item in zone.msgList">
                     <div class="user">
                         <p class="head-icon">{{(item.name).substring(0,1)}}</p>
                         <p class="name">{{item.name}}</p>
@@ -285,6 +296,8 @@
                     alertComfirm.customAlert('昵称不能为空！');
                 }else if(app.zone.username.length>4){
                     alertComfirm.customAlert('昵称不能大于四个字符！');
+                }else if(app.zone.username.length=='系统消息'){
+                    alertComfirm.customAlert('无法使用该昵称！');
                 }else{
                     mySocket.start();
                     //跳转至第一页
