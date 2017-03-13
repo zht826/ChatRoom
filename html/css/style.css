@@ -1,0 +1,212 @@
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../fonts/icomoon.eot?tb2yk4');
+    src:  url('../fonts/icomoon.eot?tb2yk4#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon.ttf?tb2yk4') format('truetype'),
+    url('../fonts/icomoon.woff?tb2yk4') format('woff'),
+    url('../fonts/icomoon.svg?tb2yk4#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-add:before {
+    content: "\e900";
+}
+.icon-arrow_down:before {
+    content: "\e901";
+}
+.icon-arrow_left:before {
+    content: "\e902";
+}
+.icon-arrow_right:before {
+    content: "\e903";
+}
+.icon-arrow_up:before {
+    content: "\e904";
+}
+.icon-check:before {
+    content: "\e905";
+}
+.icon-delete:before {
+    content: "\e906";
+}
+.icon-fivestar:before {
+    content: "\e907";
+}
+.icon-lighting:before {
+    content: "\e908";
+}
+.icon-more:before {
+    content: "\e909";
+}
+.icon-rmb:before {
+    content: "\e90a";
+}
+.icon-sixstar:before {
+    content: "\e90b";
+}
+.icon-uncheck:before {
+    content: "\e90c";
+}
+html,body{
+    background: #f5f5f9;
+    color:#3d4245;
+}
+body{
+    font-size: 0.8rem;
+}
+.list-block ul:before{
+    background-color: #e6e6e6;
+}
+.list-block ul:after{
+    background-color: #e6e6e6;
+}
+.list-block .item-inner:after{
+    background-color: #e6e6e6;
+}
+.list-block .item-after{
+    color:#999999;
+    width: 100%;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    -webkit-flex-shrink: 1;
+    -ms-flex: 0 1 auto;
+    flex-shrink: 1;
+}
+.list-block{
+    margin:0.8rem 0;
+}
+.list-block .item-inner{
+    height: 2.6rem;
+}
+.list-block .item-title.label{
+    width:5rem;
+    font-size: 1rem;
+}
+.list-block .item-after{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.tip{
+    color: #3ca0ff;
+    padding:0 1.2rem;
+    line-height: 1;
+    font-size: 0.8rem;
+}
+input{
+    display: block;
+    border:none;
+    color: #3d4245;
+    line-height:normal!important;
+    height:auto;
+    font-size:0.9rem!important;
+}
+input[type=search], input[type=text], input[type=password], input[type=datetime], input[type=datetime-local], input[type=date], input[type=month], input[type=time], input[type=week], input[type=number], input[type=email], input[type=url], input[type=tel], input[type=color], textarea{
+    border:none;
+    color: #3d4245;
+    height: 1.2rem!important;
+    line-height: 1.2rem!important;
+    font-size:1rem!important;
+}
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+    color:    #999999;
+}
+input:-moz-placeholder, textarea:-moz-placeholder {
+    color:    #999999;
+}
+input::-moz-placeholder, textarea::-moz-placeholder {
+    color:    #999999;
+}
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+    color:    #999999;
+}
+
+
+
+.list-block .item-content{
+    padding-left: 1.2rem;
+}
+li{
+    overflow: hidden;!important;
+}
+/*弹窗*/
+.modal-inner {
+    padding: 0.8rem;
+    border-radius: 0.4rem 0.4rem 0 0;
+    position: relative;
+    background: #e8e8e8;
+}
+.modal {
+    width: 16.3rem;
+    z-index: 11000;
+    margin-left: -8.15rem;
+    border-radius: 0.4rem;
+    background-color: rgba(255,255,255,0.8);
+}
+.modal-inner:after{
+    background-color:#ababae;
+}
+.modal-title{
+    font-size: 1rem;
+}
+.modal-title+.modal-text{
+    margin-top:0;
+    padding:1rem 1rem 0.8rem;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+.modal-buttons{
+    height: 2.6rem;
+}
+.modal-button {
+    padding: 0 0.3rem;
+    height: 2.6rem;
+    font-size: 0.9rem;
+    line-height: 2.6rem;
+    color: #00c8b4;
+    font-weight: 400;
+}
+.modal-button:active{
+    background-color: #00b09b;
+}
+.modal-button:first-child:last-child {
+    border-radius: 0 0 0.4rem 0.4rem;
+}
+.modal-button:first-child {
+    border-radius: 0 0 0 0.4rem;
+}
+.modal-button:last-child {
+    border-radius: 0 0 0.4rem 0;
+}
+.modal.modal-out{
+    /*z-index: -9999!important;*/
+}
+.loading-body{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+.modal-overlay{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}

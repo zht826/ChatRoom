@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="format-detection" content="telephone=no">
+    <title>欢迎来到哈哈聊天室</title>
+    <script src="http://127.0.0.1:3030/socket.io/socket.io.js"></script>
+    <!--<script src="http://tapi.zht87.com/socket.io/socket.io.js"></script>-->
+    <script src="js/flexible.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/modal-f7.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css?v=21">
+    <style>
+        #show .msg-list{
+            padding: .5rem .5rem;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-start;
+        }
+        #show .msg-list div{
+        }
+        #show .msg-list .user{
+            width: 2rem;
+            height:3rem;
+            text-align: center;
+            margin-right: 1rem;
+        }
+        #show .msg-list .user .head-icon{
+             width: 2rem;
+             height:2rem;
+             font-size: 2rem;
+            background: #FFFFFF;
+         }
+        #show .msg-list .user .name{
+            width: 2rem;
+            height:1rem;
+            font-size: 0.5rem;
+        }
+        #show .msg-list .msg-text{
+            line-height: 1.2;
+            font-size: 0.8rem;
+        }
+        .user-list{
+            height: 2rem;
+            padding: 0.5rem;
+            background-color: #efefef;
+            line-height: 2rem;
+            border-bottom: 1px solid #000000;
+        }
+        .user-list p{
+            float: left;
+            font-size: 1rem;
+            height: 2rem;
+            line-height: 2rem;
+        }
+        .user-list p.head-icon{
+            float: left;
+            font-size: 1.5rem;
+            background-color: #fff;
+            margin-right: 1rem;
+            width: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="wrap" v-if="isLogin">
+        <zone :zone="zone" v-show="menuLists[0].isActive"></zone>
+        <user :user="onlineUser" v-show="menuLists[1].isActive"></user>
+        <more v-show="menuLists[2].isActive"></more>
+        <div class="menu">
+            <div class="line-top">
+                <div class="menu-item" v-for="(item, index) in menuLists">
+                    <a href="javascript:;" :id="index" v-bind:class="{'page-active':item.isActive}" @click="goPage(index)">
+                        <p class="menu-icon"></p>
+                        <p v-text="item.title"></p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="firstPage" v-else>
+        <div class="putName">
+            <input type="text" id="name" v-model.trim="zone.username" placeholder="请输入昵称" maxlength="8">
+            <a href="javascript:void(0)" @click="login">开始</a>
+        </div>
+    </div>
+</div>
+<script type="text/x-template" id="zone">
+    <div class="zone">
+        <div class="header">
+            <div class="terminal-state">
+                <div>
+                    <p>昵称</p>
+                    <p v-text="zone.username"></p>
+                </div>
+                <div>
+                    <p>在线人数</p>
+                    <p v-text="zone.onlineCount"></p>
+                </div>
+                <p class="clearfix"></p>
+            </div>
+        </div>
+        <div class="main">
+            <div id="show">
+                <div class="msg-list" v-for="item in zone.msgList">
+                    <div class="user">
+                        <p class="head-icon">{{(item.name).substring(0,1)}}</p>
+                        <p class="name">{{item.name}}</p>
+                    </div>
+                    <div class="msg">
+                        <span class="msg-text">{{item.msg}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="send-wrap">
+                <input type="text" id="message" v-model="zone.msgText" name="" value="" placeholder="">
+                <a href="javascript:void(0)" @click="sendMsg">发送</a>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/x-template" id="user">
+    <div class="user">
+        <div class="user-list" v-for="item in user.userList">
+            <p class="head-icon">{{(item.name).substring(0,1)}}</p>
+            <p class="name">{{item.name}}</p>
+        </div>
+    </div>
+</script>
+<script type="text/x-template" id="more">
+    <div class="more">
+        <a href="tel:021-60887036" class="line-top line-bottom"><span class="more-icon"></span><span>联系我们（每日8:00～22:00）</span></a>
+        <div @click="logout" class="more-logout line-top line-bottom">退出登录</div>
+    </div>
+</script>
+<script src="js/vue.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/alertComfirm.js"></script>
+<script src="js/debug.js"></script>
+<script src="js/socket.js"></script>
+<script>
+    //切换tab是否需要请求接口获取数据
+    var zoneData = _COMMON.jsonP(localStorage.getItem('zoneData'));
+    var userData = _COMMON.jsonP(localStorage.getItem('userData'));
+    var pageIndex = sessionStorage.getItem('pageIndex') || '1';
+    var ruitui = _COMMON.jsonP(localStorage.getItem("ruitui"));
+    /**
+     * 修复微信单页面应用页面切换时无法修改页面标题
+     * @param title 页面标题字符串
+     * @returns {*}
+     */
+    function changeTitle(title){
+        document.title = title;
+        var d = new Date();
+        var iframe = document.createElement('iframe');
+        iframe.style.visibility = 'hidden';
+        iframe.setAttribute('src', 'blank.html?v=' + d.getMinutes() + d.getSeconds());
+        function iframeCallback() {
+            setTimeout(function () {
+                iframe.removeEventListener('load', iframeCallback);
+                document.body.removeChild(iframe);
+            }, 0);
+        }
+        iframe.addEventListener('load', iframeCallback);
+        document.body.appendChild(iframe);
+    }
+
+    //推客中心控件配置
+    Vue.component('zone',{
+        props: ['zone'],
+        template: '#zone',
+        data: function () {
+            return {
+            }
+        },
+        methods: {
+            sendMsg:function(){
+                if(app.zone.msgText){
+                    console.log(1);
+                    mySocket.send(app.zone.username, app.zone.msgText);
+                    app.zone.msgText = "";
+                }
+            }
+        }
+    });
+
+    //账户控件配置
+    Vue.component('user', {
+        props: ['user'],
+        template: '#user',
+        methods: {
+
+        }
+    });
+
+    //更多控件配置
+    Vue.component('more', {
+        template: '#more',
+        methods: {
+            logout: function () {
+                console.log('退出');
+                mySocket.quit();
+                app.zone.username = "";
+            }
+        }
+    });
+
+    //初始化Vue和配置页面数据
+    var app = new Vue({
+        el: '#app',
+        data: {
+            isLogin:false,
+            menuLists: [
+                { isActive: true, src: "img/index_menu_1_a.png", title: "聊天", mt: 'goPage1'},
+                { isActive: false, src: "img/index_menu_2.png", title: "用户", exact: 'goPage2'},
+                { isActive: false, src: "img/index_menu_3.png", title: "更多", exact: 'goPage3'}
+            ],
+            page:'zone',
+            pageIndex:true,
+            zone:{
+                username:'',
+                onlineCount:'',
+                msgList: [
+
+                ],
+                msgText:''
+            },
+            onlineUser:{
+                userList:[
+                    {
+                        name:'张海涛'
+                    },
+                    {
+                        name:'哈哈'
+                    },
+                ]
+            }
+
+        },
+        created:function(){
+            //判断应该显示哪一个导航页
+            if(pageIndex == '1'){
+                this.menuLists[0].isActive = true;
+                this.menuLists[1].isActive = false;
+                this.menuLists[2].isActive = false;
+            }else if(pageIndex == '2'){
+                this.menuLists[0].isActive = false;
+                this.menuLists[1].isActive = true;
+                this.menuLists[2].isActive = false;
+            }else{
+                this.menuLists[0].isActive = false;
+                this.menuLists[1].isActive = false;
+                this.menuLists[2].isActive = true;
+            }
+        },
+        methods:{
+            goPage:function(index){
+                if(index==0){
+                    app.menuLists[0].isActive = true;
+                    app.menuLists[1].isActive = false;
+                    app.menuLists[2].isActive = false;
+                    changeTitle("聊天");
+                    sessionStorage.setItem('pageIndex','1');//记录当前是第一页
+                }else if(index==1){
+                    app.menuLists[0].isActive = false;
+                    app.menuLists[1].isActive = true;
+                    app.menuLists[2].isActive = false;
+                    changeTitle("在线用户");
+                    sessionStorage.setItem('pageIndex','2');//记录当前是第二页
+                }else{
+                    app.menuLists[0].isActive = false;
+                    app.menuLists[1].isActive = false;
+                    app.menuLists[2].isActive = true;
+                    changeTitle("更多");
+                    sessionStorage.setItem('pageIndex','3');//记录当前是第三页
+                }
+            },
+            login:function(){
+                if(!app.zone.username){
+                    alertComfirm.customAlert('昵称不能为空！');
+                }else if(app.zone.username.length>4){
+                    alertComfirm.customAlert('昵称不能大于四个字符！');
+                }else{
+                    mySocket.start();
+                    //跳转至第一页
+                    app.menuLists[0].isActive = true;
+                    app.menuLists[1].isActive = false;
+                    app.menuLists[2].isActive = false;
+                    changeTitle("聊天");
+                }
+            }
+        }
+    });
+</script>  
+</body>
+</html>  
