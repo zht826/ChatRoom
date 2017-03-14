@@ -25,6 +25,21 @@ socket.on('login',function(obj) {
     app.onlineUser.userList = userList;
         console.log(userList);
 });
+//其他人登录
+socket.on('otherLogin',function(obj) {
+    var data = {};
+    data.name = "系统消息";
+    data.msg = obj.user.username + " 进入聊天室" ;
+    addMsgList(data);
+    app.zone.onlineCount = obj.onlineCount;
+
+    var userList = [];
+    for(var o in obj.onlineUsers){
+        userList.push({name: o});
+    }
+    app.onlineUser.userList = userList;
+    console.log(userList);
+});
 //退出
 socket.on('logout',function(obj) {
     console.log("连接状态", obj);

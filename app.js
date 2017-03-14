@@ -25,7 +25,8 @@ io.on('connection', function(socket){
 			//在线人数+1
 			onlineCount++;
 			//向所有客户端广播用户加入
-			io.emit('login', {onlineUsers:onlineUsers, onlineCount:onlineCount, user:obj});
+			socket.emit('login', {onlineUsers:onlineUsers, onlineCount:onlineCount, user:obj});
+            socket.broadcast.emit("otherLogin",{onlineUsers:onlineUsers, onlineCount:onlineCount, user:obj});
             console.log(obj.username+'加入了聊天室');
 		}else{
             socket.emit('alertError','昵称已存在,请重新输入!');
